@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Item(models.Model):
     name = models.CharField(max_length=200)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='products/images/', default='products/images/default.jpg')
     price = models.FloatField()
     quantity = models.IntegerField()
     description = models.TextField()

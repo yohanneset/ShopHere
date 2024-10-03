@@ -10,7 +10,7 @@ def home(request):
 @login_required
 def add_post(request):
     if request.method == 'POST':
-        form = AddPostForm(request.POST)
+        form = AddPostForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
             item.posted_by = request.user
