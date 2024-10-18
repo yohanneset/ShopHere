@@ -4,19 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
 </head>
 <body>
     {% block content %}
-        {% for item in items %}
         <ul>
-            <h2> name: <a href=" {% url 'item-detail' item.id %} "> {{ item.name }} </a> </h3>
+            <h2> name: {{ item.name }}</h3>
             <img src="{{ item.image.url }}" alt="{{ item.title }}" style="width:300px; height:200px;" >
             <h3> price: {{ item.price }}</h3>
             <h3> posted by: {{ item.posted_by.username }}</h3>
-            <h3> posted at: {{ item.added_time }}</h3>
+            {% if item.posted_by == user %}
+                <button> <a href=" {% url 'item-update' item.id %} "> Update Item </a></button>
+                <button> <a href=" {% url 'item-delete' item.id %} "> Delete Item </a></button>
+            {% endif %}
+
         </ul>
-        {% endfor %}
     {% endblock %}
 </body>
 </html>

@@ -1,21 +1,57 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import AddPostForm
+from django.views.generic import (
+    ListView, 
+    DetailView, 
+    CreateView,
+    UpdateView,
+    DeleteView
+    )
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Item
 
-def home(request):
-    items = Item.objects.all()
-    return render(request, 'main/index.html', {'items': items})
 
-@login_required
-def add_post(request):
-    if request.method == 'POST':
-        form = AddPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            item = form.save(commit=False)
-            item.posted_by = request.user
-            item.save()
-            return redirect('home')
-    else:
-        form = AddPostForm()
-        return render(request, 'main/add.html', {'form': form})
+class ItemListView(ListView):
+    model = Item
+    template_name = 'main/index.html'
+    context_object_name = 'items'
+    
+    def get_queryset(self):
+        return Item.objects.order_by('-added_time')
+
+
+class ItemDetailView(DetailView):
+    model = Item
+    template_name = 'main/detail.html'
+
+
+class ItemCreateView(LoginRequiredMixin, CreateView):
+    model = Item
+    fields = ('name', 'price', 'quantity', 'description', 'image')
+    template_name = 'main/add-item.html'
+
+    def form_valid(self, form):
+        form.instance.posted_by = self.request.user
+        return super().form_valid(form)
+
+
+class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Item
+    fields = ('name', 'price', 'quantity', 'description', 'image')
+    template_name = 'main/add-item.html'
+
+    def form_valid(self, form):
+        form.instance.posted_by = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        item = self.get_object()
+        return self.request.user == item.posted_by
+
+
+class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Item
+    template_name = 'main/delete-item.html'
+    success_url = '/'
+
+    def test_func(self):
+            item = self.get_object()
+            return self.request.user == item.posted_by
