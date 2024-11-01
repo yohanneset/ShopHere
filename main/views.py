@@ -13,6 +13,7 @@ class ItemListView(ListView):
     model = Item
     template_name = 'main/index.html'
     context_object_name = 'items'
+    paginate_by = 2
     
     def get_queryset(self):
         return Item.objects.order_by('-added_time')

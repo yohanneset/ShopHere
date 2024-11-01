@@ -17,6 +17,26 @@
             <h3> posted at: {{ item.added_time }}</h3>
         </ul>
         {% endfor %}
+
+        {% if is_paginated %}
+            {% if page_obj.number > 1 %}
+            <button><a href="?page=1">1</a></button>
+            {% endif %}
+            
+            {% if page_obj.has_previous and page_obj.number > 2 %}
+                <button><a href="?page={{ page_obj.previous_page_number }}">previous</a></button>
+            {% endif %}
+
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <button><a href="?page={{ page_obj.next_page_number }}">next</a></button>
+                {% if page_obj.paginator.num_pages > page_obj.next_page_number %}
+                    <button><a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></button>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
     {% endblock %}
 </body>
 </html>
