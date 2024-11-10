@@ -6,6 +6,8 @@ from django.views.generic import (
     DeleteView
     )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from .models import Item
 
 
@@ -56,3 +58,13 @@ class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
             item = self.get_object()
             return self.request.user == item.posted_by
+
+
+class UserPostsListView(LoginRequiredMixin, ListView):
+    model = Item
+    template_name = 'main/user-posts.html'
+    context_object_name = 'items'
+    paginate_by = 2
+
+    def get_queryset(self):
+        return Item.objects.filter(posted_by=self.request.user).order_by('-added_time')

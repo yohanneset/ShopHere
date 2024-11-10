@@ -19,6 +19,9 @@
         <li>
             <a href=" {% url 'item-create' %} "> <button> Add post </button> </a>
         </li>
+        <li>
+            <a href=" {% url 'user-posts' user.username %} "> <button> My posts </button> </a>
+        </li>
         {% else %}
         <li>
             <a href=" {% url 'register' %} "> <button> Create account </button> </a>

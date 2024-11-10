@@ -1,0 +1,37 @@
+{% extends "main/base.html" %}
+    {% block content %}
+        <h1>Posted by {{ post.kwargs.username }}  ( {{ view.kwargs.username }} )</h1>
+        {% for item in items %}
+        <ul>
+            <h2> name: <a href=" {% url 'item-detail' item.id %} "> {{ item.name }} </a> </h3>
+            <img src="{{ item.image.url }}" alt="{{ item.title }}" style="width:300px; height:200px;" >
+            <h3> price: {{ item.price }}</h3>
+            <h3> posted by: {{ item.posted_by.username }}</h3>
+            <h3> posted at: {{ item.added_time }}</h3>
+        </ul>
+        {% empty %}
+            <p>No posts available.</p>
+        {% endfor %}
+
+        {% if is_paginated %}
+            {% if page_obj.number > 1 %}
+            <button><a href="?page=1">1</a></button>
+            {% endif %}
+            
+            {% if page_obj.has_previous and page_obj.number > 2 %}
+                <button><a href="?page={{ page_obj.previous_page_number }}">previous</a></button>
+            {% endif %}
+
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <button><a href="?page={{ page_obj.next_page_number }}">next</a></button>
+                {% if page_obj.paginator.num_pages > page_obj.next_page_number %}
+                    <button><a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></button>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+    {% endblock %}
+</body>
+</html>

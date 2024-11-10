@@ -6,11 +6,13 @@ from .views import (
     ItemDetailView, 
     ItemCreateView, 
     ItemUpdateView,
-    ItemDeleteView
+    ItemDeleteView,
+    UserPostsListView,
     )
 
 urlpatterns = [
     path('', ItemListView.as_view(), name='home'),
+    path('user/<str:username>/posts/', UserPostsListView.as_view(), name='user-posts'),
     path('<int:pk>/', ItemDetailView.as_view(), name='item-detail'),
     path('add/', ItemCreateView.as_view(), name='item-create'),
     path('<int:pk>/update/', ItemUpdateView.as_view(), name='item-update'),
